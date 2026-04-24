@@ -1,0 +1,9 @@
+{
+  // Root tsconfig — delegates to per-environment configs (standard Vite pattern).
+  // IDE tools pick up the references and use the correct settings per file.
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}

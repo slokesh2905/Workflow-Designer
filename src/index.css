@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────────────────────
+   Design Tokens  (Tailwind v4 @theme)
+───────────────────────────────────────────────────────────────*/
+@theme {
+  /* Surfaces */
+  --color-surface:         #030712;   /* gray-950 – canvas base  */
+  --color-surface-raised:  #0f172a;   /* gray-900 – panels       */
+  --color-surface-overlay: #1e293b;   /* gray-800 – cards/dialogs*/
+  --color-surface-border:  #334155;   /* gray-700 – dividers     */
+
+  /* Brand */
+  --color-brand:        #6366f1;  /* indigo-500 */
+  --color-brand-light:  #818cf8;  /* indigo-400 */
+  --color-brand-dark:   #4f46e5;  /* indigo-600 */
+
+  /* Accent */
+  --color-accent-green: #10b981;  /* emerald-500 – approved  */
+  --color-accent-amber: #f59e0b;  /* amber-500   – pending   */
+  --color-accent-rose:  #f43f5e;  /* rose-500    – rejected  */
+  --color-accent-sky:   #38bdf8;  /* sky-400     – info      */
+
+  /* Typography */
+  --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-family-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Border radius */
+  --radius-flow: 0.75rem;
+
+  /* Box shadows */
+  --shadow-node:          0 0 0 1px rgba(99,102,241,0.25), 0 4px 24px rgba(0,0,0,0.6);
+  --shadow-node-selected: 0 0 0 2px #6366f1, 0 4px 32px rgba(99,102,241,0.35);
+
+  /* Animations */
+  --animate-pulse-slow: pulse 3s cubic-bezier(0.4,0,0.6,1) infinite;
+  --animate-slide-in:   slideIn 0.2s ease-out;
+  --animate-fade-in:    fadeIn  0.15s ease-out;
+
+  /* Keyframes */
+  @keyframes slideIn {
+    from { transform: translateX(1rem); opacity: 0; }
+    to   { transform: translateX(0);    opacity: 1; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Base
+───────────────────────────────────────────────────────────────*/
+@layer base {
+  :root { color-scheme: dark; }
+
+  html, body, #root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: var(--color-surface);
+    color: #f1f5f9;  /* slate-100 */
+    font-family: var(--font-family-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* React Flow canvas background */
+  .react-flow { background-color: var(--color-surface); }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar              { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track        { background: var(--color-surface-raised); }
+  ::-webkit-scrollbar-thumb        { background: var(--color-surface-border); border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover  { background: var(--color-brand); }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   Component helpers
+───────────────────────────────────────────────────────────────*/
+@layer components {
+  .panel-glass {
+    background-color: color-mix(in srgb, var(--color-surface-raised) 80%, transparent);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--color-surface-border);
+    border-radius: var(--radius-flow);
+    box-shadow: var(--shadow-node);
+  }
+
+  .flow-node {
+    position: relative;
+    border-radius: var(--radius-flow);
+    border: 1px solid var(--color-surface-border);
+    box-shadow: var(--shadow-node);
+    transition: box-shadow 0.2s;
+    cursor: pointer;
+    user-select: none;
+  }
+  .flow-node:hover          { box-shadow: var(--shadow-node-selected); }
+  .flow-node.selected       { box-shadow: var(--shadow-node-selected); border-color: var(--color-brand); }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--color-brand);
+    color: #fff;
+    font-size: 0.875rem; font-weight: 500;
+    transition: background-color 0.15s, transform 0.1s;
+    outline: none;
+  }
+  .btn-primary:hover  { background-color: var(--color-brand-dark); }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 50%, transparent); }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    color: #cbd5e1; /* slate-300 */
+    font-size: 0.875rem; font-weight: 500;
+    transition: background-color 0.15s, color 0.15s;
+    outline: none;
+  }
+  .btn-ghost:hover  { background-color: var(--color-surface-overlay); color: #fff; }
+  .btn-ghost:focus-visible { box-shadow: 0 0 0 3px var(--color-surface-border); }
+
+  .form-input {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    background-color: var(--color-surface-overlay);
+    border: 1px solid var(--color-surface-border);
+    color: #f1f5f9;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    outline: none;
+  }
+  .form-input::placeholder { color: #64748b; }
+  .form-input:focus {
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 30%, transparent);
+  }
+
+  .label {
+    display: block;
+    font-size: 0.75rem; font-weight: 500;
+    color: #94a3b8; /* slate-400 */
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────
+   ReactFlow dark-theme overrides
+───────────────────────────────────────────────────────────────*/
+
+/* Canvas */
+.react-flow__renderer       { background: var(--color-surface); }
+.react-flow__pane           { cursor: default; }
+
+/* ── Animated flowing edges ──────────────────────────────────────────────── */
+@keyframes edgeFlow {
+  to { stroke-dashoffset: -28; }
+}
+
+.react-flow__edge-path {
+  stroke: #6366f1;
+  stroke-width: 2;
+  stroke-dasharray: 8 5;
+  animation: edgeFlow 2s linear infinite;
+}
+.react-flow__connection-path {
+  stroke: #818cf8;
+  stroke-width: 2;
+  stroke-dasharray: 8 5;
+  animation: edgeFlow 1s linear infinite;
+}
+.react-flow__edge.selected .react-flow__edge-path {
+  stroke: #818cf8;
+  stroke-width: 2.5;
+  animation-duration: 0.8s;
+}
+.react-flow__edge:hover .react-flow__edge-path {
+  stroke: #a5b4fc;
+  stroke-width: 2.5;
+  animation-duration: 0.9s;
+}
+.react-flow__edge-textbg { fill: #0f172a; }
+.react-flow__edge-text   { fill: #94a3b8; font-size: 11px; }
+
+/* Suppress ReactFlow's default node box-shadow so BaseNode controls its own */
+.react-flow__node           { box-shadow: none !important; }
+.react-flow__node.selected  { box-shadow: none !important; }
+
+/* Connection line */
+.react-flow__connectionline { stroke: #818cf8; stroke-width: 2; stroke-dasharray: 5 4; }
+
+/* Controls */
+.react-flow__controls {
+  box-shadow: none;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid #1e293b;
+}
+.react-flow__controls-button {
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  color: #94a3b8;
+  width: 28px;
+  height: 28px;
+}
+.react-flow__controls-button:hover { background: #1e293b; }
+.react-flow__controls-button svg   { fill: #94a3b8; max-width: 12px; max-height: 12px; }
+.react-flow__controls-button:last-child { border-bottom: none; }
+
+/* Attribution */
+.react-flow__attribution { display: none; }
